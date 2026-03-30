@@ -55,6 +55,14 @@ export function cn(...inputs: ClassValue[]) {
 }
 ```
 
+## Shadcn config
+
+First, run install:
+
+```bash
+npx shadcn@2.3.0 init
+```
+
 ## Prisma Config Using MySQL
 
 In src, create folder \_lib:
