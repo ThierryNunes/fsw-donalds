@@ -159,6 +159,49 @@ Create on root .lintstagedrc.json, paste in
   .git/hooks/commit-mgs $1
 ```
 
+## Eslint Plugin Import Sort
+
+<!-- This extension order your imports -->
+
+First run install:
+
+npm i eslint-plugin-simple-import-sort@12.1.1
+
+on root eslint.config.mjs, paste in:
+
+```bash
+import simpleImportSort from "eslint-plugin-simple-import-sort";
+
+plugins: {
+  "simple-import-sort": simpleImportSort,
+},
+rules: {
+  "simple-import-sort/imports": "error",
+  "simple-import-sort/exports": "error",
+}
+```
+
+on root, create folder .vscode, create settings.json and paste in:
+
+```bash
+{
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
+}
+```
+
 ## Package.json
 
 ```bash

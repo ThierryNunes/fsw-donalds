@@ -1,3 +1,18 @@
 {
-    "prisma.pinToPrisma6": true
+  "prisma.pinToPrisma6": true,
+  "postman.settings.dotenv-detection-notification-visibility": false,
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
 }
