@@ -91,6 +91,8 @@ npm i prisma@6.2.1 --save-dev
 
 npm i @prisma/client@6.2.1 @prisma/adapter-mariadb dotenv
 
+npm i -D ts-node@10.9.2
+
 npx prisma init --datasource-provider mysql
 ```
 
