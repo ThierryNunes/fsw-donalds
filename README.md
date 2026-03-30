@@ -1,5 +1,13 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Create Project
+
+npx create-next-app@15.1.6 project-name
+
+npm install -D tailwindcss@3.4.1 postcss autoprefixer
+
+npm i clsx tailwind-merge tailwindcss-animate
+
 ## Getting Started
 
 First, run the development server:
@@ -20,17 +28,130 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## Next config
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+On next.config.ts paste in:
+images: {
+    remotePatterns: [
+      {
+        hostname: "utfs.io",
+      },
+    ],
+},
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Tailwind Config
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+In src, create folder \_lib:
+create utils.ts and paste in:
 
-## Deploy on Vercel
+```bash
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Prisma Config Using MySQL
+
+In src, create folder \_lib:
+
+```bash
+create prisma.ts and paste in:
+
+import { PrismaClient } from "@prisma/client";
+
+declare global {
+  // eslint-disable-next-line no-var
+  var cachedPrisma: PrismaClient;
+}
+
+let prisma: PrismaClient;
+if (process.env.NODE_ENV === "production") {
+  prisma = new PrismaClient();
+} else {
+  if (!global.cachedPrisma) {
+    global.cachedPrisma = new PrismaClient();
+  }
+  prisma = global.cachedPrisma;
+}
+
+// vou usar para chamar meu banco de dados
+export const db = prisma;
+
+```
+
+First, run the install
+
+```bash
+npm i prisma@6.2.1 --save-dev
+
+npm i @prisma/client@6.2.1 @prisma/adapter-mariadb dotenv
+
+npx prisma init --datasource-provider mysql
+```
+
+Second, run migrations and generate Prisma Client
+
+```bash
+npx prisma migrate dev --name init
+
+npx prisma generate
+```
+
+To run seeds, needs to:
+
+```bash
+add to package.json, below scripts ->
+"prisma": {
+    "seed": "ts-node prisma/seed.ts"
+}
+
+install -> npm i -D ts-node
+
+run -> npx prisma db seed
+```
+
+## Prettier with tailwindcss
+
+First run install
+
+```bash
+npm install -D prettier prettier-plugin-tailwindcss
+
+Create on root prettierrc.json, paste in
+{
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "tabWidth": 2,
+  "semi": false
+}
+```
+
+## GIT Hooks
+
+```bash
+npm i -D husky lint-staged git-commit-msg-linter
+
+npx husky init
+
+Inside the folder .husky change file pre-commit paste in: npx lint-staged
+
+Create on root .lintstagedrc.json, paste in
+{
+"*.ts?(x)": ["eslint --fix", "prettier --write"]
+}
+
+- Create inside folder .husky -> commit-msg
+  paste in:
+  .git/hooks/commit-mgs $1
+```
+
+## Package.json
+
+```bash
+on scripts paste in:
+"prepare": "husky && prisma generate"
+```
