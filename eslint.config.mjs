@@ -19,7 +19,7 @@ const eslintConfig = [
     rules: {
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
-      "no-unused-vars": "off",
+      "no-unused-vars": "error",
       "@typescript-eslint/no-empty-object-type": "off",
       "@typescript-eslint/no-empty-function": "off",
       "@typescript-eslint/no-unsafe-function-type": "off",
