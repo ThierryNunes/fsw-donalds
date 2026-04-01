@@ -24,6 +24,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
           slug: true,
         },
       },
+      ingredients: true,
     },
   })
 

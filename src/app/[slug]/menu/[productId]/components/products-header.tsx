@@ -18,7 +18,7 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
     router.back()
   }
   return (
-    <div className="relative h-[300px] w-full">
+    <div className="relative min-h-[300px] w-full">
       <Image
         className="object-contain"
         src={product.imageUrl}
