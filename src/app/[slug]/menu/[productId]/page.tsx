@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 
 import { db } from "@/lib/prisma"
 
+import ProductDetails from "./components/product-detail"
 import ProductHeader from "./components/products-header"
 
 interface ProductPageProps {
@@ -15,16 +16,29 @@ const ProductPage = async ({ params }: ProductPageProps) => {
     where: {
       id: productId,
     },
+    include: {
+      restaurant: {
+        select: {
+          name: true,
+          avatarImageUrl: true,
+          slug: true,
+        },
+      },
+    },
   })
 
   if (!products) {
     return notFound()
   }
 
+  if (products.restaurant.slug.toUpperCase() !== slug.toUpperCase()) {
+    return notFound()
+  }
+
   return (
-    <div>
+    <div className="flex h-full flex-col">
       <ProductHeader product={products} />
-      {slug}
+      <ProductDetails product={products} />
     </div>
   )
 }
