@@ -1,18 +1,22 @@
 import { ChevronLeftIcon, ChevronRightIcon, TrashIcon } from "lucide-react"
 import Image from "next/image"
+import { useContext } from "react"
 
 import { Button } from "@/components/ui/button"
 import { formatCurrency } from "@/utils/constants"
 
-import { CartProduct } from "../../../../contexts/cart"
+import { CartContext, CartProduct } from "../../../../contexts/cart"
 
 interface CartProductItemProps {
   product: CartProduct
 }
 
 const CardProductItem = ({ product }: CartProductItemProps) => {
+  const { decreaseProductQuantity, increaseProductQuantity, removeProduct } =
+    useContext(CartContext)
+
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between py-2">
       {/* LEFT */}
       <div className="flex items-center gap-3">
         <div className="relative h-20 w-20 rounded-xl bg-gray-100">
@@ -32,18 +36,30 @@ const CardProductItem = ({ product }: CartProductItemProps) => {
             {formatCurrency(product.price)}
           </p>
           <div className="flex items-center gap-1 text-center">
-            <Button className="h-7 w-7 rounded-lg" variant="outline">
+            <Button
+              className="h-7 w-7 rounded-lg"
+              variant="outline"
+              onClick={() => decreaseProductQuantity(product.id)}
+            >
               <ChevronLeftIcon />
             </Button>
             <p className="w-7 text-xs">{product.quantity}</p>
-            <Button className="h-7 w-7 rounded-lg" variant="destructive">
+            <Button
+              className="h-7 w-7 rounded-lg"
+              variant="destructive"
+              onClick={() => increaseProductQuantity(product.id)}
+            >
               <ChevronRightIcon />
             </Button>
           </div>
         </div>
       </div>
       {/* RIGHT */}
-      <Button className="h-7 w-7 rounded-lg" variant="outline">
+      <Button
+        className="h-7 w-7 rounded-lg"
+        variant="outline"
+        onClick={() => removeProduct(product.id)}
+      >
         <TrashIcon />
       </Button>
     </div>
