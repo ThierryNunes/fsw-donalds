@@ -3,30 +3,27 @@ import { useContext } from "react"
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet"
-import { formatCurrency } from "@/utils/constants"
 
-import { CartContext } from "../contexts/cart"
+import { CartContext } from "../../../../contexts/cart"
+import CardProductItem from "./cart-product-item"
 
 const CartSheet = () => {
   const { isOpen, toggleCart, products } = useContext(CartContext)
 
   return (
     <Sheet open={isOpen} onOpenChange={toggleCart}>
-      <SheetContent>
+      <SheetContent className="w-[90%]">
         <SheetHeader>
-          <SheetTitle>Produto adicionado à sacola</SheetTitle>
-          <SheetDescription>Descricao</SheetDescription>
+          <SheetTitle className="text-left">Sacola</SheetTitle>
         </SheetHeader>
-        {products.map((product) => (
-          <div key={product.id}>
-            {product.name} - {product.quantity} x{" "}
-            {formatCurrency(product.price)}
-          </div>
-        ))}
+        <div className="py-5">
+          {products.map((product) => (
+            <CardProductItem key={product.id} product={product} />
+          ))}
+        </div>
       </SheetContent>
     </Sheet>
   )

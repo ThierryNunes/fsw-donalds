@@ -4,7 +4,7 @@ import { Product } from "@prisma/client"
 import { createContext, ReactNode, useState } from "react"
 
 // Como nao tenho quantity de produtos, vou criar uma interface nova para o carrinho, onde eu consigo controlar a quantidade de cada produto
-interface CartProduct extends Pick<
+export interface CartProduct extends Pick<
   Product,
   "id" | "name" | "price" | "imageUrl"
 > {
