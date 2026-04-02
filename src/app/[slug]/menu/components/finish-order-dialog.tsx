@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ConsumptionMethod } from "@prisma/client"
+import { loadStripe } from "@stripe/stripe-js"
 import { Loader2Icon } from "lucide-react"
 import { useParams, useSearchParams } from "next/navigation"
 import { useContext, useTransition } from "react"
@@ -11,6 +12,7 @@ import { toast } from "sonner"
 import { z } from "zod"
 
 import { createOrder } from "@/actions/create-order"
+import { createStripeCheckout } from "@/actions/create-stripe-checkout"
 import { Button } from "@/components/ui/button"
 import {
   Drawer,
@@ -52,9 +54,9 @@ interface FinishOrderDialogProps {
 }
 
 const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
-  const searchParams = useSearchParams()
   const { slug } = useParams<{ slug: string }>()
   const { products } = useContext(CartContext)
+  const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
 
   const form = useForm<FormSchema>({
@@ -74,16 +76,29 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
       ) as ConsumptionMethod
       // Transition de loading no button de finalizar pedido
       startTransition(async () => {
-        await createOrder({
+        const order = (await createOrder({
           consumptionMethod,
           customerCpf: data.cpf,
           customerName: data.name,
           products,
           slug,
+        })) as { id: number }
+
+        const { sessionId } = await createStripeCheckout({
+          products,
+          slug,
+          consumptionMethod,
+          orderId: order.id,
         })
 
-        onOpenChange(false)
-        toast.success("Pedido finalizado com sucesso!")
+        const stripe = await loadStripe(
+          process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!,
+        )
+
+        if (!stripe) return
+        await stripe.redirectToCheckout({
+          sessionId,
+        })
       })
     } catch (error) {
       console.log(error)
