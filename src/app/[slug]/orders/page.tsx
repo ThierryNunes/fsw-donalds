@@ -34,6 +34,9 @@ const OrdersPage = async ({ searchParams }: OrdersPageProps) => {
         },
       },
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   })
 
   return <OrderList orders={orders} />
